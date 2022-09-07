@@ -4,6 +4,11 @@ A simple header redefinition &amp; utility library to translate sceGu styled cod
 ## Sample
 
 ```c
+#define GUGL_IMPLEMENTATION
+#include <gu2gl.h>
+
+// ... boilerplate
+
 int main(int argc, char* argv[])
 {
 	setupCallbacks();
