@@ -7,16 +7,15 @@ A simple header redefinition &amp; utility library to translate sceGu styled cod
 int main(int argc, char* argv[])
 {
 	setupCallbacks();
-
-    guglInit(list);
+        guglInit(list);
 	int val = 0;
 
 	while(running())
 	{
-    guglStartFrame(list, GL_FALSE);
-	  glClearColor(0xff554433);
-    glClearDepth(0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                guglStartFrame(list, GL_FALSE);
+	        glClearColor(0xff554433);
+                glClearDepth(0);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -37,11 +36,11 @@ int main(int argc, char* argv[])
 
 		glDrawElements(GL_TRIANGLES,GL_TEXTURE_32BITF|GL_COLOR_8888|GL_VERTEX_32BITF|GL_TRANSFORM_3D,12*3,0,vertices);
 
-        guglSwapBuffers(GL_TRUE, GL_FALSE);
+                guglSwapBuffers(GL_TRUE, GL_FALSE);
 		val++;
 	}
 
-    guglTerm();
+        guglTerm();
 
 	sceKernelExitGame();
 	return 0;
