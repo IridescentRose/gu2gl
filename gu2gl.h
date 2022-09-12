@@ -471,7 +471,7 @@ void guglInit(void* list) {
 
 	sceDisplayWaitVblankStart();
 	sceGuDisplay(GU_TRUE);
-};
+}
 
 void guglTerm(){
     sceGuTerm();
