@@ -126,6 +126,7 @@ int main(int argc, char* argv[])
 	while(running())
 	{
         guglStartFrame(list, GL_FALSE);
+        glDisable(GL_TEXTURE_2D);
 	    glClearColor(0xff554433);
         glClearDepth(0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
