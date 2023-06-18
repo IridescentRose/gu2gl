@@ -34,6 +34,7 @@
 #include <pspdisplay.h>
 #include <pspgu.h>
 #include <pspgum.h>
+#include <vramalloc.h>
 
 #ifndef _GU2GL_INCLUDED_H
 #define _GU2GL_INCLUDED_H
@@ -447,16 +448,14 @@ void *getStaticVramTexture(unsigned int width, unsigned int height,
 /// IMPLEMENTATION
 #ifdef GUGL_IMPLEMENTATION
 void guglInit(void *list) {
-    void *fbp0 =
-        getStaticVramBuffer(PSP_BUF_WIDTH, PSP_SCR_HEIGHT, GU_PSM_8888);
-    void *fbp1 =
-        getStaticVramBuffer(PSP_BUF_WIDTH, PSP_SCR_HEIGHT, GU_PSM_8888);
-    void *zbp = getStaticVramBuffer(PSP_BUF_WIDTH, PSP_SCR_HEIGHT, GU_PSM_4444);
+    void *fbp0 = vrelptr(vramalloc(vgetMemorySize(PSP_BUF_WIDTH, PSP_SCR_WIDTH, GU_PSM_5650)));
+    void *fbp1 = vrelptr(vramalloc(vgetMemorySize(PSP_BUF_WIDTH, PSP_SCR_WIDTH, GU_PSM_5650)));
+    void *zbp = vrelptr(vramalloc(vgetMemorySize(PSP_BUF_WIDTH, PSP_SCR_WIDTH, GU_PSM_4444)));
 
     sceGuInit();
 
     sceGuStart(GU_DIRECT, list);
-    sceGuDrawBuffer(GU_PSM_8888, fbp0, PSP_BUF_WIDTH);
+    sceGuDrawBuffer(GU_PSM_5650, fbp0, PSP_BUF_WIDTH);
     sceGuDispBuffer(PSP_SCR_WIDTH, PSP_SCR_HEIGHT, fbp1, PSP_BUF_WIDTH);
     sceGuDepthBuffer(zbp, PSP_BUF_WIDTH);
     sceGuOffset(2048 - (PSP_SCR_WIDTH / 2), 2048 - (PSP_SCR_HEIGHT / 2));
@@ -500,47 +499,6 @@ void guglSwapBuffers(int vsync, int dialog) {
     }
 
     sceGuSwapBuffers();
-}
-
-static unsigned int getMemorySize(unsigned int width, unsigned int height,
-                                  unsigned int psm) {
-    switch (psm) {
-    case GU_PSM_T4:
-        return (width * height) >> 1;
-
-    case GU_PSM_T8:
-        return width * height;
-
-    case GU_PSM_5650:
-    case GU_PSM_5551:
-    case GU_PSM_4444:
-    case GU_PSM_T16:
-        return 2 * width * height;
-
-    case GU_PSM_8888:
-    case GU_PSM_T32:
-        return 4 * width * height;
-
-    default:
-        return 0;
-    }
-}
-
-void *getStaticVramBuffer(unsigned int width, unsigned int height,
-                          unsigned int psm) {
-    static unsigned int staticOffset = 0;
-    unsigned int memSize = getMemorySize(width, height, psm);
-    void *result = (void *)staticOffset;
-    staticOffset += memSize;
-
-    return result;
-}
-
-void *getStaticVramTexture(unsigned int width, unsigned int height,
-                           unsigned int psm) {
-    void *result = getStaticVramBuffer(width, height, psm);
-    return (void *)(((unsigned int)result) +
-                    ((unsigned int)sceGeEdramGetAddr()));
 }
 
 #endif
